@@ -25,19 +25,20 @@
     " :PluginInstall    - 安装插件,追加 `!` 用以更新或使用 :PluginUpdate
     " :PluginSearch foo - 搜索 foo ; 追加 `!` 清除本地缓存
     " :PluginClean      - 清除未使用插件,需要确认; 追加 `!` 自动批准移除未使用插件
-    "
 
 
 "---------------配色方案----------------
-"colorscheme default 
+colorscheme default 
 "colorscheme darkblue 
-colorscheme torte 
+"colorscheme torte 
 "colorscheme koehler
 "colorscheme desert
+set t_Co=256  "可以使用的颜色数目
 
 "---------------基本编辑器设置------------
 set nu  "显示行号
 set ruler  "显示标尺
+set laststatus=2  "显示状态行
 syntax on  "语法高亮显示
 set autoindent  "设置自动缩进
 set smartindent  "设置智能缩进
@@ -48,6 +49,13 @@ set backspace=2  "设置退格键正常显示
 set nobackup  "设置不要备份
 set autoread  "文件在vim外修改过，自动重载
 set showmatch "设置高亮括号匹配
+set matchtime=1              "匹配括号高亮的时间(十分之一秒)
+set matchpairs={:},(:)          "匹配括号"{}""()"
+set hlsearch                  "检索时高亮匹配项
+set incsearch                "边检索边显示匹配
+"使用Ctrl-l 和 Ctrl+h 切换标签页
+nnoremap <C-l> gt
+nnoremap <c-h> gT
 
 "----------括号自动匹配--------------
 inoremap ' ''<ESC>i
@@ -60,9 +68,9 @@ inoremap { {<CR>}<ESC>O
 set foldenable
 set foldmethod=manual 
 
-"-------------------------------------
+""-------------------------------------
 
-"---------------
+""---------------
 set tags+=~/.vim/systags
 set tags=tags;
 
@@ -85,7 +93,7 @@ hi cFunctions gui=NONE cterm=bold  ctermfg=blue
 "----------NERDTree-----------------
 let g:NERDTreeCaseSensitiveSort = 1
 let g:NERDTreeWinSize = 25
-let g:NERDTreeWinPos = "right"
+"let g:NERDTreeWinPos = "right"
 nnoremap <silent> <Leader>t :NERDTreeToggle<CR>
 nnoremap <silent> <Leader>o :NERDTreeFind<CR>
 nmap <F1> :NERDTreeToggle<CR>
@@ -213,4 +221,5 @@ let g:Lf_HideHelp = 1
 let g:Lf_StlColorscheme = 'powerline'
 let g:Lf_PreviewResult = {'Function':0, 'BufTag':0}
 "这里定义了 CTRL+P 在当前项目目录打开文件搜索，CTRL+N 打开 MRU搜索，搜索你最近打开的文件， ALT+P 打开函数搜索，ALT+N 打开 Buffer 搜索
+
 
