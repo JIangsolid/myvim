@@ -8,7 +8,9 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'skywind3000/asyncrun.vim' "编译运行
 Plug 'Valloric/YouCompleteMe'  "自动补全
-Plug 'Shougo/echodoc.vim' "参数提示
+Plug 'Shougo/echodoc.vim'   "参数提示设置
+Plug 'w0rp/ale'  "动态检查错误
+"Plug 'rdnetto/YCM-Generator', { 'branch': 'stable'}
 
 call plug#end()
 
@@ -30,7 +32,9 @@ set t_Co=256  "可以使用的颜色数目
 
 "---------------基本编辑器设置------------
 set noshowmode "参数提示设置
+"set cmdheight=2
 set nu  "显示行号
+set relativenumber "显示相对行号
 set ruler  "显示标尺
 set laststatus=2  "显示状态行
 syntax on  "语法高亮显示
@@ -115,7 +119,7 @@ let g:asyncrun_bell = 1
 
 " 设置 F10 打开/关闭 Quickfix 窗口
 nnoremap <F10> :call asyncrun#quickfix_toggle(6)<cr>
-autocmd VimEnter * call asyncrun#quickfix_toggle(6)
+"autocmd VimEnter * call asyncrun#quickfix_toggle(6)
 
 "定义 F9 为编译单文件
 nnoremap <silent> <F9> :AsyncRun gcc -Wall -O2 "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)" <cr>
@@ -145,12 +149,21 @@ set completeopt=longest,menu	"让Vim的补全菜单行为与一般IDE一致
 
 autocmd InsertLeave * if pumvisible() == 0|pclose|endif	   "离开插入模式后自动关闭预览窗口 
 
+inoremap <expr> <CR>       pumvisible() ? "\<C-y>" : "\<CR>"	"回车即选中当前项
+
 let g:ycm_collect_identifiers_from_tags_files=1	   " 开启 YCM 基于标签引擎 
 let g:ycm_cache_omnifunc=0	      " 禁止缓存匹配项,每次都重新生成匹配项
 let g:ycm_seed_identifiers_with_syntax=1	" 语法关键字补全 
 
+"上下左右键的行为 会显示其他信息
+inoremap <expr> <Down>     pumvisible() ? "\<C-n>" : "\<Down>"
+inoremap <expr> <Up>       pumvisible() ? "\<C-p>" : "\<Up>"
+inoremap <expr> <PageDown> pumvisible() ? "\<PageDown>\<C-p>\<C-n>" : "\<PageDown>"
+inoremap <expr> <PageUp>   pumvisible() ? "\<PageUp>\<C-p>\<C-n>" : "\<PageUp>"
+
+
 let g:ycm_complete_in_comments = 1   " 补全功能在注释中同样有效
-let g:ycm_complete_in_strings = 1    "在字符串输入中也能补全补全
+let g:ycm_complete_in_strings = 1    "在字符串输入中也能补全
 let g:ycm_collect_identifiers_from_comments_and_strings = 0   "注释和字符串中的文字也会被收入补全
 
 let g:ycm_add_preview_to_completeopt = 0
@@ -165,3 +178,25 @@ let g:ycm_semantic_triggers =  {
             \ 'c,cpp,python,java,go,erlang,perl': ['re!\w{2}'],
             \ 'cs,lua,javascript': ['re!\w{2}'],
             \ }
+
+"---------------ALE---------------------
+let g:ale_linters_explicit = 1
+let g:ale_completion_delay = 500
+let g:ale_echo_delay = 20
+let g:ale_lint_delay = 500
+let g:ale_echo_msg_format = '[%linter%] %code: %%s'
+let g:ale_lint_on_text_changed = 'normal'
+let g:ale_lint_on_insert_leave = 1
+let g:airline#extensions#ale#enabled = 1
+ 
+let g:ale_c_gcc_options = '-Wall -O2 -std=c99'
+let g:ale_cpp_gcc_options = '-Wall -O2 -std=c++14'
+let g:ale_c_cppcheck_options = ''
+let g:ale_cpp_cppcheck_options = ''
+let g:ale_sign_error = "\ue009\ue009"
+hi! clear SpellBad
+hi! clear SpellCap
+hi! clear SpellRare
+hi! SpellBad gui=undercurl guisp=red
+hi! SpellCap gui=undercurl guisp=blue
+hi! SpellRare gui=undercurl guisp=magenta
